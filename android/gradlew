@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+DIR="$(cd "$(dirname "$0")" && pwd)"
+WRAPPER_JAR="$DIR/gradle/wrapper/gradle-wrapper.jar"
+WRAPPER_SHARED_JAR="$DIR/gradle/wrapper/gradle-wrapper-shared.jar"
+
+if [ ! -f "$WRAPPER_JAR" ]; then
+  echo "Missing gradle-wrapper.jar at $WRAPPER_JAR" >&2
+  exit 1
+fi
+
+JAVA_BIN="java"
+if [ -n "${JAVA_HOME:-}" ] && [ -x "$JAVA_HOME/bin/java" ]; then
+  JAVA_BIN="$JAVA_HOME/bin/java"
+fi
+
+CLASSPATH="$WRAPPER_JAR"
+if [ -f "$WRAPPER_SHARED_JAR" ]; then
+  CLASSPATH="$CLASSPATH:$WRAPPER_SHARED_JAR"
+fi
+
+exec "$JAVA_BIN" -classpath "$CLASSPATH" org.gradle.wrapper.GradleWrapperMain "$@"
