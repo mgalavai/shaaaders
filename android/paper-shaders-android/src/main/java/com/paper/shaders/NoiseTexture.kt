@@ -1,11 +1,10 @@
 package com.paper.shaders
 
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.BitmapShader
-import android.graphics.Shader
 import android.util.Base64
 
-internal data class NoiseTexture(val shader: Shader, val width: Int, val height: Int)
+internal data class NoiseTexture(val bitmap: Bitmap, val width: Int, val height: Int)
 
 internal object NoiseTextureLoader {
   fun load(): NoiseTexture {
@@ -13,8 +12,7 @@ internal object NoiseTextureLoader {
     val bytes = Base64.decode(clean, Base64.DEFAULT)
     val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
       ?: throw IllegalStateException("Failed to decode noise texture")
-    val shader = BitmapShader(bitmap, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT)
-    return NoiseTexture(shader = shader, width = bitmap.width, height = bitmap.height)
+    return NoiseTexture(bitmap = bitmap, width = bitmap.width, height = bitmap.height)
   }
 }
 
