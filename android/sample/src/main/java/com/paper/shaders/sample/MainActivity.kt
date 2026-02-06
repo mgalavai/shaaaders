@@ -38,7 +38,7 @@ class MainActivity : ComponentActivity() {
         marginBottom = 0f
       )
 
-      Box(modifier = Modifier.fillMaxSize().padding(24.dp)) {
+      Box(modifier = Modifier.fillMaxSize()) {
         PulsingBorder(
           spec = PulsingBorderSpec(width = 1280, height = 720, params = params),
           modifier = Modifier.fillMaxSize()

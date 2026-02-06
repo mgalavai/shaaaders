@@ -1,6 +1,6 @@
 package com.paper.shaders
 
-internal const val PULSING_BORDER_SHADER = """
+internal val PULSING_BORDER_SHADER = """
 uniform float u_time;
 
 uniform float4 u_colorBack;
@@ -65,14 +65,22 @@ float sst(float edge0, float edge1, float x) {
 
 float roundedBox(float2 uv, float2 halfSize, float distance, float cornerDistance, float thickness, float softness) {
   float borderDistance = abs(distance);
-  float aa = 2.0 * fwidth(distance);
-  float border = 1.0 - sst(min(mix(thickness, -thickness, softness), thickness + aa), max(mix(thickness, -thickness, softness), thickness + aa), borderDistance);
+  float px = (1.0 / min(u_resolution.x, u_resolution.y)) * u_pixelRatio;
+  float aa = 2.0 * px;
+  float border = 1.0 - sst(
+    min(mix(thickness, -thickness, softness), thickness + aa),
+    max(mix(thickness, -thickness, softness), thickness + aa),
+    borderDistance
+  );
+
   float cornerFadeCircles = 0.0;
   cornerFadeCircles = mix(1.0, cornerFadeCircles, sst(0.0, 1.0, length((uv + halfSize) / thickness)));
   cornerFadeCircles = mix(1.0, cornerFadeCircles, sst(0.0, 1.0, length((uv - float2(-halfSize.x, halfSize.y)) / thickness)));
   cornerFadeCircles = mix(1.0, cornerFadeCircles, sst(0.0, 1.0, length((uv - float2(halfSize.x, -halfSize.y)) / thickness)));
   cornerFadeCircles = mix(1.0, cornerFadeCircles, sst(0.0, 1.0, length((uv - halfSize) / thickness)));
-  aa = fwidth(cornerDistance);
+
+  aa = px;
+
   float cornerFade = sst(0.0, mix(aa, thickness, softness), cornerDistance);
   cornerFade *= cornerFadeCircles;
   border += cornerFade;

@@ -42,8 +42,8 @@ fun PulsingBorder(params: PulsingBorderParams, modifier: Modifier = Modifier) {
   val margins = params.resolveMargins()
 
   SideEffect {
-    controller.shader.setFloatUniform("u_colorBack", *colorBack)
-    controller.shader.setFloatUniform("u_colors", *colorsPacked)
+    controller.shader.setFloatUniform("u_colorBack", colorBack)
+    controller.shader.setFloatUniform("u_colors", colorsPacked)
     controller.shader.setFloatUniform("u_colorsCount", colorsCount.toFloat())
     controller.shader.setFloatUniform("u_roundness", params.roundness)
     controller.shader.setFloatUniform("u_thickness", params.thickness)
@@ -91,7 +91,7 @@ fun PulsingBorder(params: PulsingBorderParams, modifier: Modifier = Modifier) {
     }
   }
 
-  val _ = tick
+  val tickValue = tick
   Canvas(modifier = modifier) {
     controller.setResolution(size.width, size.height, density.density)
     drawRect(ShaderBrush(controller.shader))
